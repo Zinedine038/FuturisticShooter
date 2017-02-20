@@ -14,6 +14,8 @@ public class CircularMenu : MonoBehaviour
     public int menuItems;
     public int currentMenuItem;
     private int oldMenuItem;
+    public Text weaponInfo;
+    public Text ammoInfo;
     // Use this for initialization
     void Start()
     {
@@ -22,8 +24,8 @@ public class CircularMenu : MonoBehaviour
         {
             button.sceneImage.color = button.normalColor;
         }
-        currentMenuItem=0;
-        oldMenuItem=0;
+        currentMenuItem =6;
+        oldMenuItem=6;
     }
 
     // Update is called once per frame
@@ -48,7 +50,14 @@ public class CircularMenu : MonoBehaviour
             buttons[oldMenuItem].sceneImage.DOColor(buttons[oldMenuItem].normalColor,0.3f);
             oldMenuItem = currentMenuItem;
             buttons[oldMenuItem].sceneImage.DOColor(buttons[oldMenuItem].highlightedColor, 0.3f);
+            UpdateInfo();
         }
+    }
+
+    public void UpdateInfo()
+    {
+        weaponInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().weaponName;
+        ammoInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().currentAmmo.ToString() + "/" + buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().maxAmmo.ToString();
     }
 
     IEnumerator ReturnColor()
@@ -66,5 +75,4 @@ public class MenuButton
     public Color normalColor = Color.white;
     public Color highlightedColor = Color.grey;
     public Color pressedColor = Color.gray;
-    public string weapon;
 }

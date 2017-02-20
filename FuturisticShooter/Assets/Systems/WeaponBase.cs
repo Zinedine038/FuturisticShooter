@@ -15,10 +15,21 @@ public class WeaponBase : MonoBehaviour
     public string weaponName;
     public bool isMelee;
     protected bool mayAttack;
-
+    public AudioClip mechanicalSound;
+    public WeaponType fireType;
+    public int maxAmmo;
+    public int currentAmmo;
     public virtual void DoAttack(WeaponType fireMode)
     {
-        //TODO Ranged Attacks
+        switch(fireMode)
+        {
+            case WeaponType.Automatic:
+                break;
+            case WeaponType.SemiAuto:
+                break;
+            case WeaponType.Mechanical:
+                break;
+        }
     }
 
     public virtual void DoAttack(bool melee)
@@ -30,6 +41,14 @@ public class WeaponBase : MonoBehaviour
     {
         yield return new WaitForSeconds(timeToWait);
         mayAttack=true;
+    }
+
+    public virtual IEnumerator WaitForAttack(float timeToWait, AudioClip mechanic)
+    {
+        //animation
+        //sound
+        yield return new WaitForSeconds(timeToWait);
+        mayAttack = true;
     }
 
     public virtual void Activate()
