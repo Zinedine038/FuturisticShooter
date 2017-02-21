@@ -16,27 +16,24 @@ public class WeaponSelecter : MonoBehaviour
         menu.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PressedMenuDown()
     {
-        if(Input.GetButtonDown("WeaponTab"))
+        menu.gameObject.SetActive(true);
+        UpdateAmmo();
+        menu.UpdateInfo();
+    }
+
+    public void PressedMenuUp()
+    {
+        UpdateAmmo();
+        WeaponBase tempWeapon = menu.buttons[menu.currentMenuItem].sceneImage.gameObject.GetComponent<WeaponBase>();
+        if (tempWeapon != null && tempWeapon != weaponManager.equipped)
         {
-            menu.gameObject.SetActive(true);
-            UpdateAmmo();
-            menu.UpdateInfo();
+            print("switch'd");
+            weaponManager.SwitchWeapon(tempWeapon);
         }
-        if(Input.GetButtonUp("WeaponTab"))
-        {
-            UpdateAmmo();
-            WeaponBase tempWeapon = menu.buttons[menu.currentMenuItem].sceneImage.gameObject.GetComponent<WeaponBase>();
-            if (tempWeapon!=null && tempWeapon!=weaponManager.equipped)
-            {
-                print("switch'd");
-                weaponManager.SwitchWeapon(tempWeapon);
-            }
-            menu.gameObject.SetActive(false);
-            stored=tempWeapon;
-        }
+        menu.gameObject.SetActive(false);
+        stored = tempWeapon;    
     }
 
     void UpdateAmmo()

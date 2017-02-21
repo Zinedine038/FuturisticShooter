@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class CircularMenu : MonoBehaviour
     private int oldMenuItem;
     public Text weaponInfo;
     public Text ammoInfo;
+    public NXStorm nxStorm;
     // Use this for initialization
     void Start()
     {
@@ -32,7 +34,24 @@ public class CircularMenu : MonoBehaviour
     void Update()
     {
         GetCurrentMenuItem();
+        if(Input.GetButtonDown("Jump"))
+        {
+            AddWeapon(nxStorm);
+        }
+    }
 
+    public void AddWeapon(WeaponBase weaponToAdd)
+    {
+        for(int i=0; i<buttons.Count; i++)
+        {
+            print("ayy");
+            if(buttons[i].sceneImage.GetComponent<WeaponBase>()==null)
+            {
+                Type component = weaponToAdd.GetType();
+                buttons[i].sceneImage.gameObject.AddComponent(component);
+                break;
+            }
+        }
     }
 
     public void GetCurrentMenuItem()
@@ -56,8 +75,16 @@ public class CircularMenu : MonoBehaviour
 
     public void UpdateInfo()
     {
-        weaponInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().weaponName;
-        ammoInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().currentAmmo.ToString() + "/" + buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().maxAmmo.ToString();
+        if(buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>())
+        {
+            weaponInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().weaponName;
+            ammoInfo.text = buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().currentAmmo.ToString() + "/" + buttons[currentMenuItem].sceneImage.GetComponent<WeaponBase>().maxAmmo.ToString();
+        }
+        else
+        {
+            weaponInfo.text="";
+            ammoInfo.text="";
+        }
     }
 
     IEnumerator ReturnColor()
