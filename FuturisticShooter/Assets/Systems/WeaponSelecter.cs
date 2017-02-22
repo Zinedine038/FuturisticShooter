@@ -44,11 +44,14 @@ public class WeaponSelecter : MonoBehaviour
             stored.maxAmmo = weaponManager.equipped.maxAmmo;
             for (int i = 0; i < menu.buttons.Count; i++)
             {
-                if (menu.buttons[i].sceneImage.GetComponent<WeaponBase>().weaponName == stored.name)
+                if(menu.buttons[i].sceneImage.GetComponent<WeaponBase>()!=null)
                 {
-                    menu.buttons[i].sceneImage.GetComponent<WeaponBase>().maxAmmo = stored.maxAmmo;
-                    menu.buttons[i].sceneImage.GetComponent<WeaponBase>().currentAmmo = stored.currentAmmo;
-                    break;
+                    if (menu.buttons[i].sceneImage.GetComponent<WeaponBase>().weaponName == stored.name)
+                    {
+                        menu.buttons[i].sceneImage.GetComponent<WeaponBase>().maxAmmo = stored.maxAmmo;
+                        menu.buttons[i].sceneImage.GetComponent<WeaponBase>().currentAmmo = stored.currentAmmo;
+                        break;
+                    }
                 }
             }
         }
