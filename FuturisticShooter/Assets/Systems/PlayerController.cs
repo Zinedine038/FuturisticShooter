@@ -15,26 +15,29 @@ public class PlayerController : MonoBehaviour
     public bool shooting;
     public bool isJumping;
     public Rigidbody rb;
-
+    public float rampUpSpeedJump;
+    public float jumpSpeedMultiplier;
+    public Aimer aim;
     private void Awake()
     {
-        maxMoveSpeed=maxMoveSpeed*75;
-        rampDownSpeedMovement=rampDownSpeedMovement*75;
-        rampUpSpeedMovement=rampUpSpeedMovement*75;
+        maxMoveSpeed = maxMoveSpeed * 75;
+        rampDownSpeedMovement = rampDownSpeedMovement * 75;
+        rampUpSpeedMovement = rampUpSpeedMovement * 75;
+        rampUpSpeedJump = rampUpSpeedMovement * jumpSpeedMultiplier;
     }
 
 
 
     public void Update()
     {
-        if(!moving&&!isJumping)
+        if (!moving)
         {
-            if(currentMovementSpeed>0)
+            if (currentMovementSpeed > 0)
             {
                 currentMovementSpeed -= rampDownSpeedMovement;
-                if(currentMovementSpeed<0)
+                if (currentMovementSpeed < 0)
                 {
-                    currentMovementSpeed=0;
+                    currentMovementSpeed = 0;
                 }
             }
 
@@ -43,16 +46,23 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        isJumping=true;
-        moving=false;
+        isJumping = true;
         rb.AddForce(new Vector3(0, jumpForce, 0));
     }
 
     public void Move(Vector3 axis)
     {
-        if(!isJumping)
+        if (currentMovementSpeed < maxMoveSpeed)
         {
-            if (currentMovementSpeed < maxMoveSpeed)
+            if (isJumping)
+            {
+                currentMovementSpeed += rampUpSpeedJump * Time.deltaTime;
+                if (currentMovementSpeed > maxMoveSpeed)
+                {
+                    currentMovementSpeed = maxMoveSpeed;
+                }
+            }
+            else
             {
                 currentMovementSpeed += rampUpSpeedMovement * Time.deltaTime;
                 if (currentMovementSpeed > maxMoveSpeed)
@@ -60,21 +70,25 @@ public class PlayerController : MonoBehaviour
                     currentMovementSpeed = maxMoveSpeed;
                 }
             }
-            if (strafe)
-            {
-                DoMove(axis, strafe);
-            }
-            else
-            {
-                DoMove(axis);
-            }
-        }
 
+        }
+        if (strafe)
+        {
+            DoMove(axis, strafe);
+        }
+        else
+        {
+            DoMove(axis);
+        }
     }
 
     void DoMove(Vector3 axis, bool strafe)
     {
-        rb.velocity=axis*currentMovementSpeed;
+        Vector3 velocity = transform.InverseTransformDirection(rb.velocity);
+        velocity.z=axis.z*currentMovementSpeed;
+        velocity.x=axis.x*currentMovementSpeed;
+        velocity.y=rb.velocity.y;
+        rb.velocity = transform.TransformDirection(velocity);
     }
 
     void DoMove(Vector3 axis)
@@ -82,8 +96,8 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        isJumping=false;
+        isJumping = false;
     }
 }
